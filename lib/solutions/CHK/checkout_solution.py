@@ -61,6 +61,9 @@ class CheckoutSolution:
             {'item': 'Y', 'price': 20, 'offer': {'group_discount': True}},  # NEW
             {'item': 'Z', 'price': 21, 'offer': {'group_discount': True}}   # NEW
         ]
+        self.group_discount_items = ['S', 'T', 'X', 'Y', 'Z']
+        self.group_discount_price = 45
+        self.group_discount_quantity = 3
         self.free_items_given = Counter()
         
     def _get_item_lookup(self) -> dict:
@@ -70,6 +73,27 @@ class CheckoutSolution:
     def _is_valid_input(self, skus: str, item_lookup: dict) -> bool:
         # Validate that all characters in skus are valid (A, B, C, D, E)
         return isinstance(skus, str) and all(c in item_lookup for c in skus)
+    
+    
+    def _apply_group_discount(self, counts: Counter, item_lookup: dict) -> int:
+        total = 0
+        group_items = []
+
+        # Collect all group discount items from the basket
+        for item in self.group_discount_items:
+            group_items += [item] * counts.get(item, 0)
+
+        # Sort group items by price descending (favor customer)
+        group_items.sort(key=lambda item: item_lookup[item]['price'], reverse=True)
+
+        # Apply group discounts
+        while len(group_items) >= self.group_discount_quantity:
+            total += self.group_discount_price
+            for _ in range(self.group_discount_quantity):
+                used_item = group_items.pop(0)
+                counts[used_item] -= 1  # Mark that we've used up this item
+
+        return total
 
     def _award_freebies(self,counts, item_lookup):
         for item, count in counts.items():
@@ -128,8 +152,10 @@ class CheckoutSolution:
         # Stage 2 — Adjust basket by removing freebies
         self._remove_freebies(counts)
         
+        # Stage 3 - Apply group discounts
+        total += self._apply_group_discount(counts, item_lookup)
 
-        #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
+        #Stage 4 — Apply multi-buy offers and pricing on the adjusted basket
         for item, count in counts.items():
             item_details = item_lookup[item]
 
@@ -142,3 +168,4 @@ class CheckoutSolution:
 
 
         return total
+
