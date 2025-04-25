@@ -61,10 +61,9 @@ class CheckoutSolution:
 
         self.free_items_given[free_item] += free_item_count
 
-        
         print(free_item)
         # Total for the purchased items (excluding the free items)
-        total = count*price
+        total = (count*price)
         return total
 
     def checkout(self, skus: str) -> int:
@@ -83,24 +82,50 @@ class CheckoutSolution:
         total = 0
         counts = Counter(skus)
 
-        # Process each item based on whether it has an offer or not
-        for item, count in counts.items():
-            item_details = item_lookup[item]
+        # # Process each item based on whether it has an offer or not
+        # for item, count in counts.items():
+        #     item_details = item_lookup[item]
             
-            # If the item has an offer, apply the offer
-            if item_details['offer']:
-                total += self._apply_offer(item_details, count, item_lookup)
-            else:
-                # If no offer, just add the regular price * count
-                total += item_details['price'] * count
+        #     # If the item has an offer, apply the offer
+        #     if item_details['offer']:
+        #         total += self._apply_offer(item_details, count, item_lookup)
+        #     else:
+        #         # If no offer, just add the regular price * count
+        #         total += item_details['price'] * count
 
         
 
-        # Final bill adjustment — subtract free item prices from total
-        for item, free_count in self.free_items_given.items():
+        # # Final bill adjustment — subtract free item prices from total
+        # for item, free_count in self.free_items_given.items():
             
-            if item in counts:  # Only subtract if the item exists in basket
-                actual_free = min(free_count, counts[item])  # Only discount items that exist
-                total -= actual_free * item_lookup[item]['price']
+        #     if item in counts:  # Only subtract if the item exists in basket
+        #         actual_free = min(free_count, counts[item])  # Only discount items that exist
+        #         total -= actual_free * item_lookup[item]['price']
+
+        # Stage 1 — Award freebies
+        for item, count in counts.items():
+            item_details = item_lookup[item]
+            if item_details['offer'] and isinstance(item_details['offer'], (tuple, list)) and len(item_details['offer']) == 3:
+                offer_qty, _, free_item = item_details['offer']
+                offer_sets = count // offer_qty
+                self.free_items_given[free_item] += offer_sets
+
+        # Stage 2 — Adjust basket by removing freebies
+        for free_item, free_qty in self.free_items_given.items():
+            if free_item in counts:
+                counts[free_item] = max(0, counts[free_item] - free_qty)
+
+        #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
+        for item, count in counts.items():
+            item_details = item_lookup[item]
+
+            if item_details['offer']:
+                offer = item_details['offer']
+                if isinstance(offer, (tuple, list)) and len(offer) == 2:
+                    total += self._apply_multi_price_offer(item_details, count)
+                else:
+                    total += item_details['price'] * count
+            else:
+                total += item_details['price'] * count
 
         return total
