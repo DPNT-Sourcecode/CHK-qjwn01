@@ -104,5 +104,3 @@ class CheckoutSolution:
                 total -= actual_free * item_lookup[item]['price']
 
         return total
-
-

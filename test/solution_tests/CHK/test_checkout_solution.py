@@ -49,4 +49,3 @@ class TestCheckoutSolution:
     #def test_checkout_special_offer_with_b(self):
         # Test that 2 E's with 1 B in the basket correctly applies the offer and sets B to 0 cost
         #assert CheckoutSolution().checkout("EEB") == 80  # 2E for 80, 1 B free (B's cost should be 0)
-
