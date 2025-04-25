@@ -31,7 +31,7 @@ class TestSum():
         assert SumSolution().compute(0, 100) == 100  # Boundary case
         assert SumSolution().compute(50, 50) == 100  # Regular case
 
-    def test_sum_invalid_inputs(self): #legacy
+    def test_compute_invalid_inputs(self): #legacy
             """Test for invalid inputs"""
             with pytest.raises(ValueError) as excinfo:
                 SumSolution().compute(150, 20)
@@ -44,6 +44,7 @@ class TestSum():
             with pytest.raises(ValueError) as excinfo:
                 SumSolution().compute(-1, -1)
             assert str(excinfo.value) == "x must be between 0 and 100, got -1"
+
 
 
 
