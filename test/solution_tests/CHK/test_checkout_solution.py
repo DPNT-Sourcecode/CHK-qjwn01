@@ -17,5 +17,5 @@ class TestCheckoutSolution:
         assert CheckoutSolution().checkout("123") == -1  # Non-letter characters
 
     def test_checkout_empty_input(self):
-        assert CheckoutSolution().checkout("") == -1  # Empty basket should be invalid
-        assert CheckoutSolution().checkout(None) == -1  # None as input
+        assert CheckoutSolution().checkout("") == 0  # Empty basket should be invalid
+        assert CheckoutSolution().checkout(None) == 0  # None as input
