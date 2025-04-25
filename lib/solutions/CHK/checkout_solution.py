@@ -127,6 +127,3 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count, item_lookup)
 
         return total
-
-
-
