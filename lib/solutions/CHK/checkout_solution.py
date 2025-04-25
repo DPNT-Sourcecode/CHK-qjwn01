@@ -46,6 +46,3 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count)
 
         return total
-
-
-
