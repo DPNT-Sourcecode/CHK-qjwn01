@@ -41,6 +41,7 @@ class CheckoutSolution:
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         price = item_details['price']
         total = 0
+        print('applying multiprice offer')
 
         offer_qty, offer_price = item_details['offer']
         
@@ -51,9 +52,8 @@ class CheckoutSolution:
         return total
 
     def _apply_freebie_offer(self, item_details: dict, count: int) -> int:
+        print( 'freebie offer')
         price = item_details['price']
-        
-
         # Extract offer details: quantity, price, and the free item
         offer_qty, offer_price, free_item = item_details['offer']
 
@@ -64,7 +64,7 @@ class CheckoutSolution:
         self.free_items_given[free_item] += free_item_count
 
         
-        print(free_item, free_item_count)
+        print(free_item)
         # Total for the purchased items (excluding the free items)
         total = count*price
         return total
@@ -106,3 +106,4 @@ class CheckoutSolution:
                 total -= actual_free * item_lookup[item]['price']
 
         return total
+
