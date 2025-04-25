@@ -9,6 +9,7 @@ class CheckoutSolution:
             {'item': 'B', 'price': 30, 'offer': (2, 45)},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
+            {'item': 'E', 'price': 40, 'offer': [(2, 40, 'B')]}
         ]
         
     def _get_item_lookup(self) -> dict:
@@ -45,5 +46,6 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count)
 
         return total
+
 
 
