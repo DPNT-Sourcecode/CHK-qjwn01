@@ -10,7 +10,7 @@ class CheckoutSolution:
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
             {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}},
-            {'item': 'F', 'price': 10, 'offer': {'freebie': (2, 'F')}}
+            {'item': 'F', 'price': 10, 'offer': {'freebie': (3, 'F')}}
         ]
         self.free_items_given = Counter()
         
@@ -94,7 +94,7 @@ class CheckoutSolution:
 
         # Stage 2 — Adjust basket by removing freebies
         self._remove_freebies(counts)
-        print(counts)
+        
 
         #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
         for item, count in counts.items():
@@ -109,4 +109,5 @@ class CheckoutSolution:
 
 
         return total
+
 

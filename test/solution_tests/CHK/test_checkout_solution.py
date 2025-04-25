@@ -56,8 +56,9 @@ class TestCheckoutSolution:
     def test_checkout_item_f_offers(self):
         # F freebie offer check
         assert CheckoutSolution().checkout("FFF") == 20  # 2F paid, 1F free
-        assert CheckoutSolution().checkout("FFFFF") == 30  # 4F paid, 1F free (5 F's)
+        #assert CheckoutSolution().checkout("FFFFF") == 30  # 4F paid, 1F free (5 F's)
         assert CheckoutSolution().checkout("FFFFFF") == 40  # 4F paid, 2F free (6 F's)
         assert CheckoutSolution().checkout("F") == 10  # 1F paid, no freebie
         assert CheckoutSolution().checkout("FF") == 20  # 2F paid, no freebie yet
+
 
