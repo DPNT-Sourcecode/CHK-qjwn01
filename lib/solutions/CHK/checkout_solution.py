@@ -23,50 +23,15 @@ class CheckoutSolution:
     def _apply_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
         price = item_details['price']
         offer = item_details['offer']
-        total = 0
-
-        if offer:
-            best_offer_price = float('inf')  # We will track the best (lowest) price
-            
-            # Ensure offer is iterable (list or tuple) and apply the best one
-            if isinstance(offer, (list, tuple)):  # Check if offer is iterable
-                for offer_details in offer:
-                    # Validate that offer_details is a tuple or list
-                    if isinstance(offer_details, (list, tuple)) and len(offer_details) > 1:
-                        if len(offer_details) == 2:  # Normal multi-price offer (like 3A for 130)
-                            offer_qty, offer_price = offer_details
-                            total_for_this_offer = (count // offer_qty) * offer_price + (count % offer_qty) * price
-                        elif len(offer_details) == 3:  # Special offer with another item (like 2E for 80 get 1B free)
-                            offer_qty, offer_price, free_item = offer_details
-                            if count >= offer_qty:
-                                free_item_count = count // offer_qty
-                                free_item_details = item_lookup[free_item]
-                                total_for_this_offer = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
-                            else:
-                                total_for_this_offer = count * price  # If offer cannot be applied, just charge normal price
-                        else:
-                            total_for_this_offer = count * price  # No offer, just normal price
-
-                        # Check if this offer gives a better (lower) total price
-                        if total_for_this_offer < best_offer_price:
-                            best_offer_price = total_for_this_offer
-                    else:
-                        # Handle invalid offer structure
-                        print(f"Invalid offer details for {item_details['item']}: {offer_details}")
-                        return -1  # Return -1 for invalid offer details
-
-                total = best_offer_price  # Apply the best offer
-
-            else:
-                # Handle invalid offer format
-                print(f"Invalid offer format for {item_details['item']}: {offer}")
-                return -1  # Return -1 for invalid offer format
-
-        else:
-            total = count * price  # No offer, just use regular price
-
-        return total
         
+        # If there's a multi-buy price offer, apply it
+        best_offer_price = float('inf')  # Start with a very high price
+
+        if isinstance(offer, (tuple, list)):  # Check if the offer is iterable (list or tuple)
+            if len(offer) == 2:  # Multi-price offer (e.g., 3A for 130)
+                    return self._apply_multi_price_offer(item_details, count)
+ 
+            
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         # Apply multi-price offer (e.g., 3A for 130)
         price = item_details['price']
@@ -124,6 +89,12 @@ class CheckoutSolution:
         # Process each item based on whether it has an offer or not
         for item, count in counts.items():
             item_details = item_lookup[item]
-            total += self._apply_offer(item_details, count, item_lookup)
+            
+            # If the item has an offer, apply the offer
+            if item_details['offer']:
+                total += self._apply_offer(item_details, count, item_lookup)
+            else:
+                # If no offer, just add the regular price * count
+                total += item_details['price'] * count
 
         return total
