@@ -48,6 +48,20 @@ class CheckoutSolution:
         total += (count % offer_qty) * price
         
         return total
+    
+    def _apply_multibuy_price_and_return_total(self, counts, item_lookup):
+        for item, count in counts.items():
+                item_details = item_lookup[item]
+
+                if item_details['offer']:
+                    offer = item_details['offer']
+                    if isinstance(offer, (tuple, list)) and len(offer) == 2:
+                        total += self._apply_multi_price_offer(item_details, count)
+                    else:
+                        total += item_details['price'] * count
+                else:
+                    total += item_details['price'] * count
+        return total
 
 
     def _award_freebies(self,counts, item_lookup):
@@ -89,17 +103,7 @@ class CheckoutSolution:
         
 
         #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
-        for item, count in counts.items():
-            item_details = item_lookup[item]
-
-            if item_details['offer']:
-                offer = item_details['offer']
-                if isinstance(offer, (tuple, list)) and len(offer) == 2:
-                    total += self._apply_multi_price_offer(item_details, count)
-                else:
-                    total += item_details['price'] * count
-            else:
-                total += item_details['price'] * count
+        total = self._apply_multibuy_price_and_return_total(counts, item_lookup)
 
         return total
 
