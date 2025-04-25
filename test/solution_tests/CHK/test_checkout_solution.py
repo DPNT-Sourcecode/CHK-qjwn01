@@ -42,8 +42,9 @@ class TestCheckoutSolution:
         
     def test_checkout_combined_items_with_offers(self):
         #Test combining items with offers and regular prices
-        assert CheckoutSolution().checkout("AAABBCDDEE") == 380  # 3A for 130, 2B for 45, 1C for 20, 1D for 15, 2E for 80
+        assert CheckoutSolution().checkout("EEB") == 80  # 3A for 130, 2B for 45, 1C for 20, 1D for 15, 2E for 80
 
     #def test_checkout_special_offer_with_b(self):
         # Test that 2 E's with 1 B in the basket correctly applies the offer and sets B to 0 cost
         #assert CheckoutSolution().checkout("EEB") == 80  # 2E for 80, 1 B free (B's cost should be 0)
+

@@ -11,6 +11,7 @@ class CheckoutSolution:
             {'item': 'D', 'price': 15, 'offer': None},
             {'item': 'E', 'price': 40, 'offer': [(2, 80, 'B')]}
         ]
+        self.free_items_given = Counter()
         
     def _get_item_lookup(self) -> dict:
         # Build a lookup dictionary from the items
@@ -56,31 +57,24 @@ class CheckoutSolution:
         # Extract offer details: quantity, price, and the free item
         offer_qty, offer_price, free_item = item_details['offer']
 
-        # Check if we have enough items to apply the offer
-        if count >= offer_qty:
-            # Calculate how many sets of the offer can be applied
-            free_item_count = count // offer_qty
-            
-            # Total for the purchased items (excluding the free items)
-            total = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
-            
-            # Add the free item to the total (free item should be priced at 0)
-            # We handle the free item in the checkout method by setting its price to 0 (for simplicity, we assume the free item is handled elsewhere)
-            total += self._apply_freebie_item(free_item, free_item_count)
+       
+        # Calculate how many sets of the offer can be applied
+        free_item_count = count // offer_qty
         
-        else:
-            # If the offer can't be applied (not enough items), just charge the regular price
-            total = count * price
-
+        # Total for the purchased items (excluding the free items)
+        total = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
+        
+        # Add the free item to the total (free item should be priced at 0)
+        # We handle the free item in the checkout method by setting its price to 0 (for simplicity, we assume the free item is handled elsewhere)
+        total += self._apply_freebie_item(free_item, free_item_count)
+        
         return total
-
-    def _apply_freebie_item(self, free_item: str, free_item_count: int) -> int:
-        # Handle the free item's price, which is always 0
-        return 0  # Free item costs nothing
 
     def checkout(self, skus: str) -> int:
         # Get the item lookup once
         item_lookup = self._get_item_lookup()
+
+        self.free_items_given = Counter() #reset the count of free items per 'checkout'
 
         # Handle empty or invalid input
         if not skus:
@@ -102,5 +96,11 @@ class CheckoutSolution:
             else:
                 # If no offer, just add the regular price * count
                 total += item_details['price'] * count
+
+        # Final bill adjustment — subtract free item prices from total
+        for item, free_count in self.free_items_given.items():
+            if item in counts:  # Only subtract if the item exists in basket
+                actual_free = min(free_count, counts[item])  # Only discount items that exist
+                total -= actual_free * item_lookup[item]['price']
 
         return total
