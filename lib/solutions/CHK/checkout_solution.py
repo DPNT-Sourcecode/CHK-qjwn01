@@ -83,7 +83,10 @@ class CheckoutSolution:
         item_lookup = self._get_item_lookup()
 
         # Handle empty or invalid input
-        if not skus or not self._is_valid_input(skus, item_lookup):
+        if not skus:
+            return 0
+        
+        if not self._is_valid_input(skus, item_lookup):
             return -1
 
         total = 0
@@ -101,3 +104,4 @@ class CheckoutSolution:
                 total += item_details['price'] * count
 
         return total
+

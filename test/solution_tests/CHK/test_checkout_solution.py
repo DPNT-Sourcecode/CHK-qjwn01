@@ -30,7 +30,7 @@ class TestCheckoutSolution:
 
     def test_checkout_empty_input(self):
         # Test empty input handling (should return 0)
-        #assert CheckoutSolution().checkout("") == 0  # Empty basket should return 0
+        assert CheckoutSolution().checkout("") == 0  # Empty basket should return 0
         assert CheckoutSolution().checkout(None) == 0  # None as input
 
     # def test_checkout_invalid_input(self):
@@ -47,4 +47,5 @@ class TestCheckoutSolution:
     #def test_checkout_special_offer_with_b(self):
         # Test that 2 E's with 1 B in the basket correctly applies the offer and sets B to 0 cost
         #assert CheckoutSolution().checkout("EEB") == 80  # 2E for 80, 1 B free (B's cost should be 0)
+
 
