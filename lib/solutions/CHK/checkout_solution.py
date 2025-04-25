@@ -136,12 +136,25 @@ class CheckoutSolution:
         #         total += count_to_charge * item_details['price']
 
 
+        # for item, count in counts.items():
+        #     item_details = item_lookup[item]
+
+        #     if item_details['offer']:
+        #         offer = item_details['offer']
+        #         if isinstance(offer, (tuple, list)) and len(offer) == 2:
+        #             total += self._apply_multi_price_offer(item_details, count)
+        #         else:
+        #             total += item_details['price'] * count
+        #     else:
+        #         total += item_details['price'] * count
+
         for item, count in counts.items():
             item_details = item_lookup[item]
 
-            if item_details['offer']:
-                offer = item_details['offer']
-                if isinstance(offer, (tuple, list)) and len(offer) == 2:
+            offer = item_details.get('offer')
+
+            if offer:
+                if 'multibuy_price' in offer:
                     total += self._apply_multi_price_offer(item_details, count)
                 else:
                     total += item_details['price'] * count
@@ -162,3 +175,4 @@ class CheckoutSolution:
         #         total += count_to_charge * item_details['price']
 
         return total
+
