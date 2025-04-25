@@ -9,7 +9,7 @@ class CheckoutSolution:
             {'item': 'B', 'price': 30, 'offer': (2, 45)},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
-            {'item': 'E', 'price': 40, 'offer': [(2, 80, 'B')]}
+            #{'item': 'E', 'price': 40, 'offer': [(2, 80, 'B')]}
         ]
         
     def _get_item_lookup(self) -> dict:
@@ -77,29 +77,38 @@ class CheckoutSolution:
             total += (count % offer_qty) * price
         return total
 
-    def _apply_special_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
-        price = item_details['price']
-        offer_total = 0
-        free_b_count = 0  # Track the number of free B's given
+    # def _apply_special_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
+    #     price = item_details['price']
+    #     offer_total = 0
+    #     free_b_count = 0  # Track the number of free B's given
 
-        # Apply each offer
-        for offer_details in item_details['offer']:
-            offer_qty, offer_price, free_item = offer_details
+    #     # Apply each offer
+    #     for offer_details in item_details['offer']:
+    #         offer_qty, offer_price, free_item = offer_details
             
-            # Apply the offer for every full set of the offer quantity
-            if count >= offer_qty:
-                free_item_count = count // offer_qty
-                free_item_details = item_lookup[free_item]
+    #    def _apply_special_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
+    #     price = item_details['price']
+    #     offer_total = 0
+    #     free_b_count = 0  # Track the number of free B's given
 
-                # Apply the offer price and subtract B's price (if free)
-                offer_total += (count - (free_item_count * offer_qty)) * price
-                offer_total += free_item_count * offer_price  # Free B's should have offer_price (0 for free B)
-                free_b_count += free_item_count  # Track how many free B's are given
+    #     # Apply each offer
+    #     for offer_details in item_details['offer']:
+    #         offer_qty, offer_price, free_item = offer_details
+            
+    #         # Apply the offer for every full set of the offer quantity
+    #         if count >= offer_qty:
+    #             free_item_count = count // offer_qty
+    #             free_item_details = item_lookup[free_item]
 
-            else:
-                offer_total += count * price  # If offer cannot be applied, just charge normal price
+    #             # Apply the offer price and subtract B's price (if free)
+    #             offer_total += (count - (free_item_count * offer_qty)) * price
+    #             offer_total += free_item_count * offer_price  # Free B's should have offer_price (0 for free B)
+    #             free_b_count += free_item_count  # Track how many free B's are given
 
-        return offer_total
+    #         else:
+    #             offer_total += count * price  # If offer cannot be applied, just charge normal price
+
+    #     return offer_total
 
     def checkout(self, skus: str) -> int:
         # Get the item lookup once
@@ -118,5 +127,6 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count, item_lookup)
 
         return total
+
 
 
