@@ -5,11 +5,11 @@ class CheckoutSolution:
     def __init__(self):
         # Prices and special offers as class attributes
         self.items = [
-            {'item': 'A', 'price': 50, 'offer': (3, 130)},
-            {'item': 'B', 'price': 30, 'offer': (2, 45)},
+            {'item': 'A', 'price': 50, 'offer': {'multibuy_price': [(5, 200), (3, 130)]}},
+            {'item': 'B', 'price': 30, 'offer': {'multibuy_price': (2, 45)}},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
-            {'item': 'E', 'price': 40, 'offer': (2, 80, 'B')}
+            {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}}
         ]
         self.free_items_given = Counter()
         
@@ -40,8 +40,9 @@ class CheckoutSolution:
     def _award_freebies(self,counts, item_lookup):
         for item, count in counts.items():
             item_details = item_lookup[item]
-            if item_details['offer'] and isinstance(item_details['offer'], (tuple, list)) and len(item_details['offer']) == 3:
-                offer_qty, _, free_item = item_details['offer']
+            offer = item_details.get('offer')
+            if offer and 'freebie' in offer:
+                offer_qty, free_item = offer['freebie']
                 offer_sets = count // offer_qty
                 self.free_items_given[free_item] += offer_sets
 
@@ -50,21 +51,39 @@ class CheckoutSolution:
             if free_item in counts:
                 counts[free_item] = max(0, counts[free_item] - free_qty)
     
+    # def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
+    #     price = item_details['price']
+    #     offers = item_details['offer']
+
+    #     # If it's a single offer, wrap it in a list
+    #     if isinstance(offers[0], int):
+    #         offers = [offers]
+
+    #     # Sort offers by quantity descending
+    #     offers = sorted(offers, key=lambda x: x[0], reverse=True)
+
+    #     total = 0
+    #     for offer_qty, offer_price in offers:
+    #         total += (count // offer_qty) * offer_price
+    #         count = count % offer_qty
+
+    #     total += count * price
+    #     return total
+
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         price = item_details['price']
-        offers = item_details['offer']
+        multibuy_offer = item_details['offer'].get('multibuy_price')
 
-        # If it's a single offer, wrap it in a list
-        if isinstance(offers[0], int):
-            offers = [offers]
+        if isinstance(multibuy_offer, tuple):
+            multibuy_offer = [multibuy_offer]
 
-        # Sort offers by quantity descending
-        offers = sorted(offers, key=lambda x: x[0], reverse=True)
+        multibuy_offer = sorted(multibuy_offer, key=lambda x: x[0], reverse=True)
 
         total = 0
-        for offer_qty, offer_price in offers:
-            total += (count // offer_qty) * offer_price
-            count = count % offer_qty
+        for offer_qty, offer_price in multibuy_offer:
+            sets = count // offer_qty
+            total += sets * offer_price
+            count -= sets * offer_qty
 
         total += count * price
         return total
