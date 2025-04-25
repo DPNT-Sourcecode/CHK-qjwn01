@@ -18,3 +18,4 @@ class TestCheckoutSolution:
 
     def test_checkout_empty_input(self):
         assert CheckoutSolution().checkout("") == -1  # Empty basket should be invalid
+        assert CheckoutSolution().checkout(None) == -1  # None as input
