@@ -38,31 +38,30 @@ class CheckoutSolution:
         return count * item_details['price']
  
             
-    def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
-        price = item_details['price']
-        total = 0
-        offer_qty, offer_price = item_details['offer']
+    # def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
+    #     price = item_details['price']
+    #     total = 0
+    #     offer_qty, offer_price = item_details['offer']
         
-        # Apply the offer for full sets and calculate the remainder at regular price
-        total += (count // offer_qty) * offer_price
-        total += (count % offer_qty) * price
+    #     # Apply the offer for full sets and calculate the remainder at regular price
+    #     total += (count // offer_qty) * offer_price
+    #     total += (count % offer_qty) * price
         
-        return total
+    #     return total
     
     def _apply_multibuy_price_and_return_total(self, counts, item_lookup):
+        total = 0
         for item, count in counts.items():
-                item_details = item_lookup[item]
-
-                if item_details['offer']:
-                    offer = item_details['offer']
-                    if isinstance(offer, (tuple, list)) and len(offer) == 2:
-                        total += self._apply_multi_price_offer(item_details, count)
-                    else:
-                        total += item_details['price'] * count
+            item_details = item_lookup[item]
+            if item_details['offer']:
+                offer = item_details['offer']
+                if isinstance(offer, (tuple, list)) and len(offer) == 2:
+                    total += self._apply_multi_price_offer(item_details, count)
                 else:
                     total += item_details['price'] * count
+            else:
+                total += item_details['price'] * count
         return total
-
 
     def _award_freebies(self,counts, item_lookup):
         for item, count in counts.items():
@@ -106,4 +105,5 @@ class CheckoutSolution:
         total = self._apply_multibuy_price_and_return_total(counts, item_lookup)
 
         return total
+
 
