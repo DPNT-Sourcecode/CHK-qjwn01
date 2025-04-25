@@ -9,7 +9,8 @@ class CheckoutSolution:
             {'item': 'B', 'price': 30, 'offer': {'multibuy_price': (2, 45)}},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
-            {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}}
+            {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}},
+            {'item': 'F', 'price': 10, 'offer': {'freebie': (2, 'F')}}
         ]
         self.free_items_given = Counter()
         
