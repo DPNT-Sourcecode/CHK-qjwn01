@@ -4,18 +4,47 @@ class CheckoutSolution:
 
     def __init__(self):
         # Prices and special offers as class attributes
+        # self.items = [
+        #     {'item': 'A', 'price': 50, 'offer': {'multibuy_price': [(5, 200), (3, 130)]}},
+        #     {'item': 'B', 'price': 30, 'offer': {'multibuy_price': (2, 45)}},
+        #     {'item': 'C', 'price': 20, 'offer': None},
+        #     {'item': 'D', 'price': 15, 'offer': None},
+        #     {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}},
+        #     {'item': 'F', 'price': 10, 'offer': {'freebie': (3, 'F')}},
+        #     {'item': 'G', 'price': 20, 'offer': None},
+        #     {'item': 'H', 'price': 10, 'offer': {'multibuy_price': [(10, 80), (5, 45)]}},
+        #     {'item': 'I', 'price': 35, 'offer': None},
+        #     {'item': 'J', 'price': 60, 'offer': None},
+        #     {'item': 'K', 'price': 70, 'offer': {'multibuy_price': (2, 120)}},
+        #     {'item': 'L', 'price': 90, 'offer': None},
+        #     {'item': 'M', 'price': 15, 'offer': None},
+        #     {'item': 'N', 'price': 40, 'offer': {'freebie': (3, 'M')}},
+        #     {'item': 'O', 'price': 10, 'offer': None},
+        #     {'item': 'P', 'price': 50, 'offer': {'multibuy_price': (5, 200)}},
+        #     {'item': 'Q', 'price': 30, 'offer': {'multibuy_price': (3, 80)}},
+        #     {'item': 'R', 'price': 50, 'offer': {'freebie': (3, 'Q')}},
+        #     {'item': 'S', 'price': 20, 'offer': None},
+        #     {'item': 'T', 'price': 20, 'offer': None},
+        #     {'item': 'U', 'price': 40, 'offer': {'freebie': (4, 'U')}}, #self_freebie
+        #     {'item': 'V', 'price': 50, 'offer': {'multibuy_price': [(3, 130), (2, 90)]}},
+        #     {'item': 'W', 'price': 20, 'offer': None},
+        #     {'item': 'X', 'price': 17, 'offer': None},
+        #     {'item': 'Y', 'price': 20, 'offer': None},
+        #     {'item': 'Z', 'price': 21, 'offer': None}
+        # ]
+
         self.items = [
             {'item': 'A', 'price': 50, 'offer': {'multibuy_price': [(5, 200), (3, 130)]}},
             {'item': 'B', 'price': 30, 'offer': {'multibuy_price': (2, 45)}},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
             {'item': 'E', 'price': 40, 'offer': {'freebie': (2, 'B')}},
-            {'item': 'F', 'price': 10, 'offer': {'freebie': (3, 'F')}},
+            {'item': 'F', 'price': 10, 'offer': {'freebie': (3, 'F')}},  # Self-freebie (leave as is for now)
             {'item': 'G', 'price': 20, 'offer': None},
             {'item': 'H', 'price': 10, 'offer': {'multibuy_price': [(10, 80), (5, 45)]}},
             {'item': 'I', 'price': 35, 'offer': None},
             {'item': 'J', 'price': 60, 'offer': None},
-            {'item': 'K', 'price': 80, 'offer': {'multibuy_price': (2, 150)}},
+            {'item': 'K', 'price': 70, 'offer': {'multibuy_price': (2, 120)}},  # Price changed
             {'item': 'L', 'price': 90, 'offer': None},
             {'item': 'M', 'price': 15, 'offer': None},
             {'item': 'N', 'price': 40, 'offer': {'freebie': (3, 'M')}},
@@ -23,14 +52,14 @@ class CheckoutSolution:
             {'item': 'P', 'price': 50, 'offer': {'multibuy_price': (5, 200)}},
             {'item': 'Q', 'price': 30, 'offer': {'multibuy_price': (3, 80)}},
             {'item': 'R', 'price': 50, 'offer': {'freebie': (3, 'Q')}},
-            {'item': 'S', 'price': 30, 'offer': None},
-            {'item': 'T', 'price': 20, 'offer': None},
-            {'item': 'U', 'price': 40, 'offer': {'freebie': (4, 'U')}}, #self_freebie
+            {'item': 'S', 'price': 20, 'offer': {'group_discount': True}},  # NEW
+            {'item': 'T', 'price': 20, 'offer': {'group_discount': True}},  # NEW
+            {'item': 'U', 'price': 40, 'offer': {'freebie': (4, 'U')}},      # Self-freebie (leave as is for now)
             {'item': 'V', 'price': 50, 'offer': {'multibuy_price': [(3, 130), (2, 90)]}},
             {'item': 'W', 'price': 20, 'offer': None},
-            {'item': 'X', 'price': 90, 'offer': None},
-            {'item': 'Y', 'price': 10, 'offer': None},
-            {'item': 'Z', 'price': 50, 'offer': None}
+            {'item': 'X', 'price': 17, 'offer': {'group_discount': True}},  # NEW
+            {'item': 'Y', 'price': 20, 'offer': {'group_discount': True}},  # NEW
+            {'item': 'Z', 'price': 21, 'offer': {'group_discount': True}}   # NEW
         ]
         self.free_items_given = Counter()
         
@@ -42,22 +71,6 @@ class CheckoutSolution:
         # Validate that all characters in skus are valid (A, B, C, D, E)
         return isinstance(skus, str) and all(c in item_lookup for c in skus)
 
-    def _apply_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
-        price = item_details['price']
-        offer = item_details['offer']
-        
-        # If there's a multi-buy price offer, apply it
-        best_offer_price = float('inf')  # Start with a very high price
-
-        if isinstance(offer, (tuple, list)):  # Check if the offer is iterable (list or tuple)
-            if len(offer) == 2:  # Multi-price offer (e.g., 3A for 130)
-                    return self._apply_multi_price_offer(item_details, count)
-            if len(offer) == 3:  # Freebie offer (e.g., 2E gets free B)
-                    return self._apply_freebie_offer(item_details, count)
-            
-        # If no valid offer, just return the regular price
-        return count * item_details['price']
- 
     def _award_freebies(self,counts, item_lookup):
         for item, count in counts.items():
             item_details = item_lookup[item]
