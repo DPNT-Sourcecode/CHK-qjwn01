@@ -109,5 +109,3 @@ class CheckoutSolution:
 
 
         return total
-
-
