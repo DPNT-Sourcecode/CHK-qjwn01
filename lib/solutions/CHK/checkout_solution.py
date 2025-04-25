@@ -33,13 +33,16 @@ class CheckoutSolution:
  
             
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
-        # Apply multi-price offer (e.g., 3A for 130)
         price = item_details['price']
         total = 0
-        for offer_details in item_details['offer']:
-            offer_qty, offer_price = offer_details
-            total += (count // offer_qty) * offer_price
-            total += (count % offer_qty) * price
+
+        # Apply the multi-price offer directly (no need for a loop)
+        offer_qty, offer_price = item_details['offer']
+        
+        # Apply the offer for full sets and calculate the remainder at regular price
+        total += (count // offer_qty) * offer_price
+        total += (count % offer_qty) * price
+        
         return total
 
     # def _apply_special_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
