@@ -49,22 +49,19 @@ class CheckoutSolution:
         
         return total
 
-    def _apply_freebie_offer(self, item_details: dict, count: int) -> int:
-        print( 'freebie offer')
-        price = item_details['price']
-        # Extract offer details: quantity, price, and the free item
-        offer_qty, offer_price, free_item = item_details['offer']
 
-       
-        # Calculate how many sets of the offer can be applied
-        free_item_count = count // offer_qty
+    def _award_freebies(self,counts, item_lookup):
+        for item, count in counts.items():
+            item_details = item_lookup[item]
+            if item_details['offer'] and isinstance(item_details['offer'], (tuple, list)) and len(item_details['offer']) == 3:
+                offer_qty, _, free_item = item_details['offer']
+                offer_sets = count // offer_qty
+                self.free_items_given[free_item] += offer_sets
 
-        self.free_items_given[free_item] += free_item_count
-
-        print(free_item)
-        # Total for the purchased items (excluding the free items)
-        total = (count*price)
-        return total
+    def _remove_freebies(self, counts):
+        for free_item, free_qty in self.free_items_given.items():
+            if free_item in counts:
+                counts[free_item] = max(0, counts[free_item] - free_qty)
 
     def checkout(self, skus: str) -> int:
         # Get the item lookup once
@@ -84,17 +81,12 @@ class CheckoutSolution:
 
 
         # Stage 1 — Award freebies
-        for item, count in counts.items():
-            item_details = item_lookup[item]
-            if item_details['offer'] and isinstance(item_details['offer'], (tuple, list)) and len(item_details['offer']) == 3:
-                offer_qty, _, free_item = item_details['offer']
-                offer_sets = count // offer_qty
-                self.free_items_given[free_item] += offer_sets
+        self._award_freebies(counts, item_lookup)
+        
 
         # Stage 2 — Adjust basket by removing freebies
-        for free_item, free_qty in self.free_items_given.items():
-            if free_item in counts:
-                counts[free_item] = max(0, counts[free_item] - free_qty)
+        self._remove_freebies(counts)
+        
 
         #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
         for item, count in counts.items():
@@ -110,3 +102,4 @@ class CheckoutSolution:
                 total += item_details['price'] * count
 
         return total
+
