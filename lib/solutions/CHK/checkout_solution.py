@@ -148,4 +148,17 @@ class CheckoutSolution:
             else:
                 total += item_details['price'] * count
 
+        # for item, count in counts.items():
+        #     item_details = item_lookup[item]
+
+        #     free_count = self.free_items_given.get(item, 0)
+        #     count_to_charge = max(0, count - free_count)
+
+        #     offer = item_details.get('offer')
+
+        #     if offer and 'multibuy_price' in offer:
+        #         total += self._apply_multi_price_offer(item_details, count_to_charge)
+        #     else:
+        #         total += count_to_charge * item_details['price']
+
         return total
