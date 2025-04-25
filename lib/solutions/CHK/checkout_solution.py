@@ -94,7 +94,7 @@ class CheckoutSolution:
 
         # Stage 2 — Adjust basket by removing freebies
         self._remove_freebies(counts)
-        
+        print(counts)
 
         #Stage 3 — Apply multi-buy offers and pricing on the adjusted basket
         for item, count in counts.items():
@@ -109,3 +109,4 @@ class CheckoutSolution:
 
 
         return total
+
