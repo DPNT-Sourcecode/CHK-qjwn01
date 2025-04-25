@@ -82,25 +82,6 @@ class CheckoutSolution:
         total = 0
         counts = Counter(skus)
 
-        # # Process each item based on whether it has an offer or not
-        # for item, count in counts.items():
-        #     item_details = item_lookup[item]
-            
-        #     # If the item has an offer, apply the offer
-        #     if item_details['offer']:
-        #         total += self._apply_offer(item_details, count, item_lookup)
-        #     else:
-        #         # If no offer, just add the regular price * count
-        #         total += item_details['price'] * count
-
-        
-
-        # # Final bill adjustment — subtract free item prices from total
-        # for item, free_count in self.free_items_given.items():
-            
-        #     if item in counts:  # Only subtract if the item exists in basket
-        #         actual_free = min(free_count, counts[item])  # Only discount items that exist
-        #         total -= actual_free * item_lookup[item]['price']
 
         # Stage 1 — Award freebies
         for item, count in counts.items():
