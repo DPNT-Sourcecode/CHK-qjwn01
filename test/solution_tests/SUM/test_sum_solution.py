@@ -1,4 +1,4 @@
-from solutions.SUM.sum_solution import SumSolution
+from lib.solutions.SUM.sum_solution import SumSolution
 import pytest
 
 
@@ -23,3 +23,4 @@ class TestSum():
             with pytest.raises(ValueError) as excinfo:
                 SumSolution().compute(-1, -1)
             assert str(excinfo.value) == "x must be between 0 and 100, got -1"
+
