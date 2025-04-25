@@ -9,7 +9,7 @@ class CheckoutSolution:
             {'item': 'B', 'price': 30, 'offer': (2, 45)},
             {'item': 'C', 'price': 20, 'offer': None},
             {'item': 'D', 'price': 15, 'offer': None},
-            {'item': 'E', 'price': 40, 'offer': [(2, 80, 'B')]}
+            {'item': 'E', 'price': 40, 'offer': (2, 80, 'B')}
         ]
         self.free_items_given = Counter()
         
@@ -41,8 +41,6 @@ class CheckoutSolution:
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         price = item_details['price']
         total = 0
-        print('applying multiprice offer')
-
         offer_qty, offer_price = item_details['offer']
         
         # Apply the offer for full sets and calculate the remainder at regular price
@@ -106,4 +104,5 @@ class CheckoutSolution:
                 total -= actual_free * item_lookup[item]['price']
 
         return total
+
 
