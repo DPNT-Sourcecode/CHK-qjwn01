@@ -30,32 +30,34 @@ class CheckoutSolution:
             best_offer_qty = 0
             best_offer_additional_item = None
             
-            for offer_details in offer:
-                if len(offer_details) == 2:  # Normal multi-price offer (like 3A for 130)
-                    offer_qty, offer_price = offer_details
-                    total_for_this_offer = (count // offer_qty) * offer_price + (count % offer_qty) * price
-                elif len(offer_details) == 3:  # Special offer with another item (like 2E for 80 get 1B free)
-                    offer_qty, offer_price, free_item = offer_details
-                    if count >= offer_qty:
-                        free_item_count = count // offer_qty
-                        free_item_details = item_lookup[free_item]
-                        total_for_this_offer = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
+            # Ensure offer is iterable (list or tuple) and apply the best one
+            if isinstance(offer, (list, tuple)):  # Check if offer is iterable
+                for offer_details in offer:
+                    if len(offer_details) == 2:  # Normal multi-price offer (like 3A for 130)
+                        offer_qty, offer_price = offer_details
+                        total_for_this_offer = (count // offer_qty) * offer_price + (count % offer_qty) * price
+                    elif len(offer_details) == 3:  # Special offer with another item (like 2E for 80 get 1B free)
+                        offer_qty, offer_price, free_item = offer_details
+                        if count >= offer_qty:
+                            free_item_count = count // offer_qty
+                            free_item_details = item_lookup[free_item]
+                            total_for_this_offer = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
+                        else:
+                            total_for_this_offer = count * price  # If offer cannot be applied, just charge normal price
                     else:
-                        total_for_this_offer = count * price  # If offer cannot be applied, just charge normal price
-                else:
-                    total_for_this_offer = count * price  # No offer, just normal price
+                        total_for_this_offer = count * price  # No offer, just normal price
 
-                # Check if this offer gives a better (lower) total price
-                if total_for_this_offer < best_offer_price:
-                    best_offer_price = total_for_this_offer
+                    # Check if this offer gives a better (lower) total price
+                    if total_for_this_offer < best_offer_price:
+                        best_offer_price = total_for_this_offer
             
-            total = best_offer_price
+                total = best_offer_price  # Apply the best offer
 
         else:
             total = count * price  # No offer, just use regular price
 
         return total
-
+    
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         # Apply multi-price offer (e.g., 3A for 130)
         price = item_details['price']
