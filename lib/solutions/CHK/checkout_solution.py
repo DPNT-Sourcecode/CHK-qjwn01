@@ -102,5 +102,3 @@ class CheckoutSolution:
                 total += item_details['price'] * count
 
         return total
-
-
