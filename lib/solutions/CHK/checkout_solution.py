@@ -74,9 +74,9 @@ class CheckoutSolution:
 
         return total
 
-def _apply_freebie_item(self, free_item: str, free_item_count: int) -> int:
-    # Handle the free item's price, which is always 0
-    return 0  # Free item costs nothing
+    def _apply_freebie_item(self, free_item: str, free_item_count: int) -> int:
+        # Handle the free item's price, which is always 0
+        return 0  # Free item costs nothing
 
     def checkout(self, skus: str) -> int:
         # Get the item lookup once
