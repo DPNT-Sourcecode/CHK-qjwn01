@@ -61,6 +61,7 @@ class CheckoutSolution:
         # Calculate how many sets of the offer can be applied
         free_item_count = count // offer_qty
         
+        print(free_item, free_item_count)
         # Total for the purchased items (excluding the free items)
         total = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
         
@@ -97,7 +98,7 @@ class CheckoutSolution:
                 # If no offer, just add the regular price * count
                 total += item_details['price'] * count
 
-        print (self.free_items_given.items())
+        
 
         # Final bill adjustment — subtract free item prices from total
         for item, free_count in self.free_items_given.items():
@@ -107,6 +108,7 @@ class CheckoutSolution:
                 total -= actual_free * item_lookup[item]['price']
 
         return total
+
 
 
 
