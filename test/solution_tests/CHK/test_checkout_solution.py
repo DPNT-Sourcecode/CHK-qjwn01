@@ -38,8 +38,6 @@ class TestCheckoutSolution:
 
     def test_checkout_invalid_input(self):
         # Test invalid SKU input (should return -1)
-        assert CheckoutSolution().checkout("AAAX") == -1  # Invalid SKU X
-        assert CheckoutSolution().checkout("ZZZ") == -1  # Invalid SKUs
         assert CheckoutSolution().checkout("123") == -1  # Non-letter characters
         assert CheckoutSolution().checkout("AAB@") == -1  # Invalid character '@'
         
@@ -60,3 +58,4 @@ class TestCheckoutSolution:
         assert CheckoutSolution().checkout("FFFFFF") == 40  # 4F paid, 2F free (6 F's)
         assert CheckoutSolution().checkout("F") == 10  # 1F paid, no freebie
         assert CheckoutSolution().checkout("FF") == 20  # 2F paid, no freebie yet
+

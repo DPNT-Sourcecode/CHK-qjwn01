@@ -16,6 +16,21 @@ class CheckoutSolution:
             {'item': 'I', 'price': 35, 'offer': None},
             {'item': 'J', 'price': 60, 'offer': None},
             {'item': 'K', 'price': 80, 'offer': {'multibuy_price': (2, 150)}},
+            {'item': 'L', 'price': 90, 'offer': None},
+            {'item': 'M', 'price': 15, 'offer': None},
+            {'item': 'N', 'price': 40, 'offer': {'freebie': (3, 'M')}},
+            {'item': 'O', 'price': 10, 'offer': None},
+            {'item': 'P', 'price': 50, 'offer': {'multibuy_price': (5, 200)}},
+            {'item': 'Q', 'price': 30, 'offer': {'multibuy_price': (3, 80)}},
+            {'item': 'R', 'price': 50, 'offer': {'freebie': (3, 'Q')}},
+            {'item': 'S', 'price': 30, 'offer': None},
+            {'item': 'T', 'price': 20, 'offer': None},
+            {'item': 'U', 'price': 40, 'offer': {'freebie': (4, 'U')}}, #self_freebie
+            {'item': 'V', 'price': 50, 'offer': {'multibuy_price': [(3, 130), (2, 90)]}},
+            {'item': 'W', 'price': 20, 'offer': None},
+            {'item': 'X', 'price': 90, 'offer': None},
+            {'item': 'Y', 'price': 10, 'offer': None},
+            {'item': 'Z', 'price': 50, 'offer': None}
         ]
         self.free_items_given = Counter()
         
@@ -114,3 +129,4 @@ class CheckoutSolution:
 
 
         return total
+
