@@ -39,18 +39,28 @@ class CheckoutSolution:
         return total
 
     def _apply_special_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
-        # Apply special offer with another item (e.g., 2E for 80, get 1B free)
         price = item_details['price']
         offer_total = 0
+        free_b_count = 0  # Track the number of free B's given
+
+        # Loop through the offer details
         for offer_details in item_details['offer']:
             offer_qty, offer_price, free_item = offer_details
+            
+            # Apply the offer for every full set of the offer quantity
             if count >= offer_qty:
                 free_item_count = count // offer_qty
                 free_item_details = item_lookup[free_item]
+                
+                # Reduce the price of B's already in the basket by the free item offer
+                # Subtract the cost of the free B's
                 offer_total += (count - (free_item_count * offer_qty)) * price
-                offer_total += free_item_count * offer_price
+                offer_total += free_item_count * offer_price  # Price of free B's (which is essentially 0 in this case)
+                free_b_count += free_item_count  # Increment the free B's count
+                
             else:
                 offer_total += count * price  # If offer cannot be applied, just charge normal price
+
         return offer_total
 
     def checkout(self, skus: str) -> int:
@@ -70,3 +80,4 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count, item_lookup)
 
         return total
+
