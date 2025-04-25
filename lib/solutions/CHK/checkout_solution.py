@@ -97,7 +97,7 @@ class CheckoutSolution:
                 # If no offer, just add the regular price * count
                 total += item_details['price'] * count
 
-        print (item, free_count)
+        print (self.free_items_given.items())
 
         # Final bill adjustment — subtract free item prices from total
         for item, free_count in self.free_items_given.items():
@@ -107,5 +107,6 @@ class CheckoutSolution:
                 total -= actual_free * item_lookup[item]['price']
 
         return total
+
 
 
