@@ -52,7 +52,7 @@ class CheckoutSolution:
 
     def _apply_freebie_offer(self, item_details: dict, count: int) -> int:
         price = item_details['price']
-        total = 0
+        
 
         # Extract offer details: quantity, price, and the free item
         offer_qty, offer_price, free_item = item_details['offer']
@@ -60,15 +60,13 @@ class CheckoutSolution:
        
         # Calculate how many sets of the offer can be applied
         free_item_count = count // offer_qty
+
+        self.free_items_given[free_item] += free_item_count
+
         
         print(free_item, free_item_count)
         # Total for the purchased items (excluding the free items)
-        total = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
-        
-        # Add the free item to the total (free item should be priced at 0)
-        # We handle the free item in the checkout method by setting its price to 0 (for simplicity, we assume the free item is handled elsewhere)
-        total += self._apply_freebie_item(free_item, free_item_count)
-        
+        total = count*price
         return total
 
     def checkout(self, skus: str) -> int:
