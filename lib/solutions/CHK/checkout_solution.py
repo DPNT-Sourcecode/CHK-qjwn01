@@ -37,19 +37,6 @@ class CheckoutSolution:
         # If no valid offer, just return the regular price
         return count * item_details['price']
  
-            
-    def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
-        price = item_details['price']
-        total = 0
-        offer_qty, offer_price = item_details['offer']
-        
-        # Apply the offer for full sets and calculate the remainder at regular price
-        total += (count // offer_qty) * offer_price
-        total += (count % offer_qty) * price
-        
-        return total
-
-
     def _award_freebies(self,counts, item_lookup):
         for item, count in counts.items():
             item_details = item_lookup[item]
@@ -62,6 +49,25 @@ class CheckoutSolution:
         for free_item, free_qty in self.free_items_given.items():
             if free_item in counts:
                 counts[free_item] = max(0, counts[free_item] - free_qty)
+    
+    def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
+        price = item_details['price']
+        offers = item_details['offer']
+
+        # If it's a single offer, wrap it in a list
+        if isinstance(offers[0], int):
+            offers = [offers]
+
+        # Sort offers by quantity descending
+        offers = sorted(offers, key=lambda x: x[0], reverse=True)
+
+        total = 0
+        for offer_qty, offer_price in offers:
+            total += (count // offer_qty) * offer_price
+            count = count % offer_qty
+
+        total += count * price
+        return total
 
     def checkout(self, skus: str) -> int:
         # Get the item lookup once
@@ -92,13 +98,27 @@ class CheckoutSolution:
         for item, count in counts.items():
             item_details = item_lookup[item]
 
+            free_count = self.free_items_given.get(item, 0)
+            count_to_charge = max(0, count - free_count)
+
             if item_details['offer']:
                 offer = item_details['offer']
                 if isinstance(offer, (tuple, list)) and len(offer) == 2:
-                    total += self._apply_multi_price_offer(item_details, count)
+                    total += self._apply_multi_price_offer(item_details, count_to_charge)
                 else:
-                    total += item_details['price'] * count
+                    total += count_to_charge * item_details['price']
             else:
-                total += item_details['price'] * count
+                total += count_to_charge * item_details['price']
+        # for item, count in counts.items():
+        #     item_details = item_lookup[item]
+
+        #     if item_details['offer']:
+        #         offer = item_details['offer']
+        #         if isinstance(offer, (tuple, list)) and len(offer) == 2:
+        #             total += self._apply_multi_price_offer(item_details, count)
+        #         else:
+        #             total += item_details['price'] * count
+        #     else:
+        #         total += item_details['price'] * count
 
         return total
