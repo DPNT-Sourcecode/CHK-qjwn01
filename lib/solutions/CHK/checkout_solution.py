@@ -21,12 +21,40 @@ class CheckoutSolution:
         return isinstance(skus, str) and all(c in item_lookup for c in skus)
 
     def _apply_offer(self, item_details: dict, count: int, item_lookup: dict) -> int:
-        # Main offer application logic: decide which type of offer to apply
-        if len(item_details['offer']) == 2:  # Multi-price offer (like 3A for 130)
-            return self._apply_multi_price_offer(item_details, count)
-        elif len(item_details['offer']) == 3:  # Special offer with another item (like 2E for 80 get 1B free)
-            return self._apply_special_offer(item_details, count, item_lookup)
-        return count * item_details['price']  # Default: no offer applied
+        price = item_details['price']
+        offer = item_details['offer']
+        total = 0
+
+        if offer:
+            best_offer_price = float('inf')  # We will track the best (lowest) price
+            best_offer_qty = 0
+            best_offer_additional_item = None
+            
+            for offer_details in offer:
+                if len(offer_details) == 2:  # Normal multi-price offer (like 3A for 130)
+                    offer_qty, offer_price = offer_details
+                    total_for_this_offer = (count // offer_qty) * offer_price + (count % offer_qty) * price
+                elif len(offer_details) == 3:  # Special offer with another item (like 2E for 80 get 1B free)
+                    offer_qty, offer_price, free_item = offer_details
+                    if count >= offer_qty:
+                        free_item_count = count // offer_qty
+                        free_item_details = item_lookup[free_item]
+                        total_for_this_offer = (count - (free_item_count * offer_qty)) * price + free_item_count * offer_price
+                    else:
+                        total_for_this_offer = count * price  # If offer cannot be applied, just charge normal price
+                else:
+                    total_for_this_offer = count * price  # No offer, just normal price
+
+                # Check if this offer gives a better (lower) total price
+                if total_for_this_offer < best_offer_price:
+                    best_offer_price = total_for_this_offer
+            
+            total = best_offer_price
+
+        else:
+            total = count * price  # No offer, just use regular price
+
+        return total
 
     def _apply_multi_price_offer(self, item_details: dict, count: int) -> int:
         # Apply multi-price offer (e.g., 3A for 130)
@@ -80,4 +108,5 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count, item_lookup)
 
         return total
+
 
