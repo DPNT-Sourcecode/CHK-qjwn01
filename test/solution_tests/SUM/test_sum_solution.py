@@ -45,7 +45,3 @@ class TestSum():
                 SumSolution().compute(-1, -1)
             assert str(excinfo.value) == "x must be between 0 and 100, got -1"
 
-
-
-
-
