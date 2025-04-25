@@ -82,7 +82,7 @@ class CheckoutSolution:
         offer_total = 0
         free_b_count = 0  # Track the number of free B's given
 
-        # Loop through the offer details
+        # Apply each offer
         for offer_details in item_details['offer']:
             offer_qty, offer_price, free_item = offer_details
             
@@ -90,13 +90,12 @@ class CheckoutSolution:
             if count >= offer_qty:
                 free_item_count = count // offer_qty
                 free_item_details = item_lookup[free_item]
-                
-                # Reduce the price of B's already in the basket by the free item offer
-                # Subtract the cost of the free B's
+
+                # Apply the offer price and subtract B's price (if free)
                 offer_total += (count - (free_item_count * offer_qty)) * price
-                offer_total += free_item_count * offer_price  # Price of free B's (which is essentially 0 in this case)
-                free_b_count += free_item_count  # Increment the free B's count
-                
+                offer_total += free_item_count * offer_price  # Free B's should have offer_price (0 for free B)
+                free_b_count += free_item_count  # Track how many free B's are given
+
             else:
                 offer_total += count * price  # If offer cannot be applied, just charge normal price
 
@@ -119,4 +118,5 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count, item_lookup)
 
         return total
+
 
