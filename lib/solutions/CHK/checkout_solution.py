@@ -31,7 +31,7 @@ class CheckoutSolution:
     def checkout(self, skus: str) -> int:
         # Validate input and calculate total price
         item_lookup = self._get_item_lookup()
-        if not self._is_valid_input(skus):
+        if not skus or not self._is_valid_input(skus):
             return -1
         
         total = 0
@@ -42,3 +42,4 @@ class CheckoutSolution:
             total += self._apply_offer(item_details, count)
 
         return total
+
